@@ -16,12 +16,32 @@ def todo():
     input_label.pack()
     input = tk.Entry(window)
     input.pack()
-    add_task_button = tk.Button(window, text="Submit")
+
+    def add_task():
+        task_entry = input.get()
+        if task_entry:
+            tasks.append(task_entry)
+        with open(file_path, "r") as file:
+            data = json.load(file)
+        if not data:
+            data = [{"id": 1, "task": task_entry, "status": "In-Progress"}]
+        else:
+            max_id = max(data, key=lambda x: x.get("id", float("-inf")))["id"] + 1
+            data.append({"id": max_id, "task": task_entry, "status": "In-Progress"})
+        with open(file_path, "w") as file:
+            json.dump(data, file)
+        task_listbox.insert(tk.END, task_entry)
+
+    add_task_button = tk.Button(window, text="Submit", command=add_task)
     add_task_button.pack()
 
     task_listbox = tk.Listbox(window)
     task_listbox.pack()
 
+    tasks = []
+
+    
+        
     window.mainloop()
 
 if __name__ == "__main__":
