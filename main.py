@@ -1,11 +1,14 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, ttk
+from styling import *
 import os
 import json
 
 window = tk.Tk()
 window.title("To-do List")
 window.geometry("300x400")
+style = ttk.Style()
+style.theme_use("clam")
 
 def todo():
     file_path = os.path.join(os.path.dirname(__file__), "tasks.json")
@@ -13,9 +16,8 @@ def todo():
         with open(file_path, "w") as file:
             json.dump([], file)
 
-    input_label = tk.Label(window, text="Enter task:")
-    input_label.pack()
-    input = tk.Entry(window)
+    ttk.Label(window, text="Enter task:", font=font_normal).pack()
+    input = ttk.Entry(window)
     input.pack()
 
     tasks = []
@@ -35,11 +37,8 @@ def todo():
             task_listbox.insert(tk.END, task_entry)
             input.delete(0, tk.END)
 
-    add_task_button = tk.Button(window, text="Submit", command=add_task)
-    add_task_button.pack()
-
-    task_listbox_label = tk.Label(window, text="Tasks:")
-    task_listbox_label.pack()
+    ttk.Button(window, text="Submit", command=add_task).pack()
+    ttk.Label(window, text="Tasks:",  font=font_normal).pack()
     task_listbox = tk.Listbox(window)
     task_listbox.pack()
 
