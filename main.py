@@ -40,6 +40,14 @@ def todo():
 
     task_listbox = tk.Listbox(window)
     task_listbox.pack()
+
+    def get_tasks():
+        with open(file_path, "r") as file:
+            data = json.load(file)
+        for item in data:
+            task_listbox.insert(tk.END, item["task"])
+
+    get_tasks()
         
     window.mainloop()
 
