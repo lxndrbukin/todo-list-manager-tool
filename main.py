@@ -23,13 +23,13 @@ def todo():
     def add_task():
         task_entry = input.get()
         if task_entry:
+            task_data = {}
             with open(file_path, "r") as file:
                 data = json.load(file)
-            if not data:
-                data = [{"id": 1, "task": task_entry, "status": "In-Progress"}]
-            else:
-                max_id = max(data, key=lambda x: x.get("id", float("-inf")))["id"] + 1
-                data.append({"id": max_id, "task": task_entry, "status": "In-Progress"})
+            max_id = 1 if not data else max(data, key=lambda x: x.get("id", float("-inf")))["id"] + 1
+            task_data = {"id": max_id, "task": task_entry, "status": "In-Progress"}
+            data.append(task_data)
+            tasks.append(task_data)
             with open(file_path, "w") as file:
                 json.dump(data, file)
             task_listbox.insert(tk.END, task_entry)
@@ -38,6 +38,8 @@ def todo():
     add_task_button = tk.Button(window, text="Submit", command=add_task)
     add_task_button.pack()
 
+    task_listbox_label = tk.Label(window, text="Tasks:")
+    task_listbox_label.pack()
     task_listbox = tk.Listbox(window)
     task_listbox.pack()
 
@@ -49,7 +51,7 @@ def todo():
                 task_listbox.insert(tk.END, item["task"])
 
     get_tasks()
-    
+
     def delete_task():
         selected = task_listbox.curselection()
         if selected:
