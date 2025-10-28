@@ -66,4 +66,7 @@ def todo():
     window.mainloop()
 
 if __name__ == "__main__":
-    todo()
+    try:
+        todo()
+    except KeyboardInterrupt:
+        print("Program stopped by user")
