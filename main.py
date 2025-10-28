@@ -12,5 +12,17 @@ def todo():
         with open(file_path, "w") as file:
             json.dump([], file)
 
+    input_label = tk.Label(window, text="Enter task:")
+    input_label.pack()
+    input = tk.Entry(window)
+    input.pack()
+    add_task_button = tk.Button(window, text="Submit")
+    add_task_button.pack()
+
+    task_listbox = tk.Listbox(window)
+    task_listbox.pack()
+
+    window.mainloop()
+
 if __name__ == "__main__":
     todo()
