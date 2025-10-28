@@ -17,6 +17,8 @@ def todo():
     input = tk.Entry(window)
     input.pack()
 
+    tasks = []
+
     def add_task():
         task_entry = input.get()
         if task_entry:
@@ -31,16 +33,13 @@ def todo():
         with open(file_path, "w") as file:
             json.dump(data, file)
         task_listbox.insert(tk.END, task_entry)
+        input.delete(0, tk.END)
 
     add_task_button = tk.Button(window, text="Submit", command=add_task)
     add_task_button.pack()
 
     task_listbox = tk.Listbox(window)
     task_listbox.pack()
-
-    tasks = []
-
-    
         
     window.mainloop()
 
