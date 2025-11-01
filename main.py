@@ -34,7 +34,7 @@ def todo():
             tasks.append(task_data)
             with open(file_path, "w") as file:
                 json.dump(data, file)
-            task_listbox.insert('', tk.END, values=(task_data["id"], task_data["task"], task_data["status"]))
+            task_listbox.insert('', tk.END, iid=len(data)-1, values=(task_data["id"], task_data["task"], task_data["status"]))
             input.delete(0, tk.END)
 
     ttk.Button(window, text="Submit", command=add_task).pack()
@@ -47,6 +47,8 @@ def todo():
     task_listbox.heading("task", text="Task")
     task_listbox.heading("status", text="Status")
     task_listbox.column("id", width=35, minwidth=20, stretch=False, anchor='center')
+    task_listbox.column("task", anchor='center')
+    task_listbox.column("status", width=90, minwidth=70, stretch=False, anchor='center')
     task_listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
     scrollbar = tk.Scrollbar(task_listbox_frame, orient=tk.VERTICAL)
     scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
@@ -57,17 +59,19 @@ def todo():
         if os.path.exists(file_path):
             with open(file_path, "r") as file:
                 tasks.extend(json.load(file))
-            for item in tasks:
-                task_listbox.insert('', tk.END, iid=item["id"], values=(item["id"], item["task"], item["status"]))
+            for i, item in enumerate(tasks):
+                task_listbox.insert('', tk.END, iid=i, values=(item["id"], item["task"], item["status"]))
 
     get_tasks()
 
     def delete_task():
         selected = task_listbox.selection()
         if selected:
-            tasks.pop(int(selected[0]) - 1)
-            task_listbox.delete(selected)
-            messagebox.showinfo("Task Deleted", f"Deleted task: {selected[0]}")
+            for item in selected:
+                task_to_delete = tasks[int(item)]
+                tasks.pop(int(item))
+                task_listbox.delete(item)
+                messagebox.showinfo("Task Deleted", f"Deleted task: {task_to_delete["id"]}")
             with open(file_path, "w") as file:
                 json.dump(tasks, file)
     
