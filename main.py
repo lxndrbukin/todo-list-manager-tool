@@ -39,8 +39,14 @@ def todo():
 
     ttk.Button(window, text="Submit", command=add_task).pack()
     ttk.Label(window, text="Tasks:",  font=font_normal).pack()
-    task_listbox = tk.Listbox(window)
-    task_listbox.pack()
+    task_listbox_frame = tk.Frame(window)
+    task_listbox_frame.pack(pady=10, padx=10, fill=tk.BOTH, expand=True)
+    task_listbox = tk.Listbox(task_listbox_frame)
+    task_listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+    scrollbar = tk.Scrollbar(task_listbox_frame, orient=tk.VERTICAL)
+    scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+    task_listbox.config(yscrollcommand=scrollbar.set)
+    scrollbar.config(command=task_listbox.yview)
 
     def get_tasks():
         if os.path.exists(file_path):
