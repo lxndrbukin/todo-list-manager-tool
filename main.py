@@ -34,14 +34,19 @@ def todo():
             tasks.append(task_data)
             with open(file_path, "w") as file:
                 json.dump(data, file)
-            task_listbox.insert(tk.END, task_entry)
+            task_listbox.insert('', tk.END, values=(task_data["id"], task_data["task"], task_data["status"]))
             input.delete(0, tk.END)
 
     ttk.Button(window, text="Submit", command=add_task).pack()
     ttk.Label(window, text="Tasks:",  font=font_normal).pack()
+
     task_listbox_frame = tk.Frame(window)
     task_listbox_frame.pack(pady=10, padx=10, fill=tk.BOTH, expand=True)
-    task_listbox = tk.Listbox(task_listbox_frame)
+    task_listbox = ttk.Treeview(task_listbox_frame, columns=["id", "task", "status"], show="headings")
+    task_listbox.heading("id", text="ID")
+    task_listbox.heading("task", text="Task")
+    task_listbox.heading("status", text="Status")
+    task_listbox.column("id", width=35, minwidth=20, stretch=False, anchor='center')
     task_listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
     scrollbar = tk.Scrollbar(task_listbox_frame, orient=tk.VERTICAL)
     scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
@@ -53,16 +58,16 @@ def todo():
             with open(file_path, "r") as file:
                 tasks.extend(json.load(file))
             for item in tasks:
-                task_listbox.insert(tk.END, item["task"])
+                task_listbox.insert('', tk.END, iid=item["id"], values=(item["id"], item["task"], item["status"]))
 
     get_tasks()
 
     def delete_task():
-        selected = task_listbox.curselection()
+        selected = task_listbox.selection()
         if selected:
-            task_to_delete = tasks.pop(selected[0])
+            tasks.pop(int(selected[0]) - 1)
             task_listbox.delete(selected)
-            messagebox.showinfo("Task Deleted", f"Deleted task: {task_to_delete["task"]}")
+            messagebox.showinfo("Task Deleted", f"Deleted task: {selected[0]}")
             with open(file_path, "w") as file:
                 json.dump(tasks, file)
     
